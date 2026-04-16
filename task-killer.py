@@ -8,7 +8,7 @@ userinput = None
 
 rawconfig = None
 with open("task-killer-config.csv",  'r', newline="") as file:
-	rawconfig = csv.reader(file)
+	rawconfig = list(csv.reader(file))
 
 data = {}
 datakeys = []
