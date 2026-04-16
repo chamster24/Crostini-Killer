@@ -35,7 +35,7 @@ while True:
 		userinput = input("Select an option: ")
 		try:
 			userinputint = int(userinput)
-			if (userinputint <= (len(datakeys) + 2)) and (userinputint != 0):
+			if (userinputint <= (len(datakeys) + 3)) and (userinputint != 0):
 				break
 			else:
 				print("Invalid option. Try again!")
