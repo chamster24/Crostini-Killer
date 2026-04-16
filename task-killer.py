@@ -55,7 +55,7 @@ while True:
 				break
 			else:
 				print("Invalid response, please retype!")
-	elif index =- -3:
+	elif index == -1:
 		while True:
 			userinput = input("Are you sure you wish to shut down Linux? Y/N: ")
 			if userinput.upper() == "Y":
