@@ -1,0 +1,2 @@
+*NAME,*SOFTKILL,*ROUGHKILL
+Example,pkill example,pkill -9 example
