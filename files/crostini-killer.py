@@ -53,7 +53,7 @@ while True:
 	
 	if index == -3: # quit
 		while True:
-			userinput = input("Are you sure you wish to exit? Y/N: ")
+			userinput = input("Are you sure you wish to exit? Y/N: (NOTE: THIS SCRIPT DOES NOT WORK AS INTENDED. IF YOU RUN IT LINUX WON'T OPEN UNTIL YOU RESTART.) ")
 			if userinput.upper() == "Y":
 				sys.exit()
 			elif userinput.upper() == "N":
