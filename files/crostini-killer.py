@@ -19,7 +19,7 @@ with open("crostini-killer-config.csv", 'r', newline="") as file:
 data = {}
 datakeys = []
 for line in rawconfig:
-	if not str(line[0])[0] == "*":
+	if not str(line[0])[0] == "#":
 		if not str(line[0]) in datakeys:
 			datakeys.append(str(line[0]))
 		try:
