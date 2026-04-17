@@ -1,4 +1,4 @@
-# Task Killer
+# Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
 version = "V1.0.0 PreRelease Alpha Build 4"
@@ -12,7 +12,7 @@ userinput = None
 
 rawconfig = None
 # opens the csv and reads it
-with open("task-killer-config.csv", 'r', newline="") as file:
+with open("crostini-killer-config.csv", 'r', newline="") as file:
 	rawconfig = csv.reader(file)
 
 # writes the data list
@@ -29,7 +29,7 @@ for line in rawconfig:
 
 # main system process
 while True:
-	print(f"Task Killer {version}")
+	print(f"Crostini Killer {version}")
 	
 	message = "\n1. Exit program\n2. Edit config file\n3. Shut down Linux"
 	n = 4
