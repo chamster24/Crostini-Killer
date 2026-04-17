@@ -19,7 +19,7 @@ fi
 # checks for shortcut, if no, prompts to install
 if [ ! -f $HOME/.local/share/applications/crostini-killer.desktop ]; then
   SHORTCUT_PATH=$HOME/.local/share/applications/crostini-killer.desktop
-  echo "Would you like to add a shortcut to the taskbar?"
+  echo "Would you like to add a shortcut to the taskbar? (type 'Y' if you do)"
     read -n 1 -r  # waits for 1 character
     echo ""       # Move to a new line after the keypress
     
