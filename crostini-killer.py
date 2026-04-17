@@ -1,7 +1,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 4"
+version = "V1.0.0 PreRelease Alpha Build 5"
 
 import psutil
 import os
@@ -68,7 +68,7 @@ while True:
 			userinput = input("Are you sure you wish to shut down Linux? Y/N: ")
 			if userinput.upper() == "Y":
 				print("Now asking Linux to shutdown...")
-				os.system("shutdown -h now")
+				os.system("sudo shutdown -h now")
 				time.sleep(10)
 				sys.exit()
 			elif userinput.upper() == "N":
