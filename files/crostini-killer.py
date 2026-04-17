@@ -1,7 +1,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 5"
+version = "V1.0.0 PreRelease Alpha Build 6"
 
 import psutil
 import os
@@ -86,7 +86,7 @@ while True:
 		while True:
 			if completed:
 				break
-			userinput = input(f"Choose how to kill {datakeys[index]}:\n\n1. Softkill (asking it nicely)\n\n2. Hardkill (tactical nuke, risks loosing data)\n\n3. Nevermind, get me out of here (return to menu)")
+			userinput = input(f"Choose how to kill {datakeys[index]}:\n\n1. Softkill (asking it nicely, '{softkill}')\n\n2. Hardkill (tactical nuke, risks loosing data, '{hardkill}')\n\n3. Nevermind, get me out of here (return to menu)")
 			try:
 				userinputint = int(userinput)
 				if (userinputint <= 2) and (userinputint != 0):
