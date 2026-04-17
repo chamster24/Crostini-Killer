@@ -7,6 +7,7 @@ mkdir -p ~/.cH24-Apps/Crostini-Killer/
 
 # Copy the python script
 curl -sSL "$RAW_URL/crostini-killer.py" -o ~/.cH24-Apps/Crostini-Killer/crostini-killer.py
+chmod +x ~/.cH24-Apps/Crostini-Killer/crostini-killer.py
 echo "Crostini-Killer Installed/Updated!"
 
 # check to see if the config file is already there
