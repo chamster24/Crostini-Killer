@@ -1,15 +1,17 @@
 #!/bin/bash
 
+RAW_URL="https://raw.githubusercontent.com/chamster24/Crostini-Killer/main/files"
+
 # Make the folder
 mkdir -p ~/.cH24-Apps/Crostini-Killer/
 
 # Copy the python script
-cp /files/crostini-killer.py ~/.cH24-Apps/Crostini-Killer/
+curl -sSL "$RAW_URL/crostini-killer.py" -o ~/.cH24-Apps/Crostini-Killer/crostini-killer.py
 echo "Crostini-Killer Installed/Updated!"
 
 # check to see if the config file is already there
 if [ ! -f ~/.cH24-Apps/Crostini-Killer/crostini-killer-config.csv ]; then
-  cp /files/crostini-killer-config.csv ~/.cH24-Apps/Crostini-Killer/
+  curl -sSL "$RAW_URL/crostini-killer-Config.csv" -o ~/.cH24-Apps/Crostini-Killer/crostini-killer-config.csv
   echo "Installed template config file!"
 fi
 
@@ -22,7 +24,7 @@ if [ ! -f $HOME/.local/share/applications/crostini-killer.desktop ]; then
     
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "Adding shortcut!"
-        cp /files/icon.png ~/.cH24-Apps/Crostini-Killer/
+        curl -sSL "$RAW_URL/icon.png" -o ~/.cH24-Apps/Crostini-Killer/icon.png
 cat <<EOF > "$SHORTCUT_PATH"
 [Desktop Entry]
 Name=Crostini Killer
