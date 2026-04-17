@@ -1,3 +1,3 @@
-*NAME,*SOFTKILL,*ROUGHKILL
-Kill Tool Example,pkill example,pkill -9 example
-Update Apps,sudo apt update,sudo apt upgrade -y,*not an intended purpose
+# NAME,# SOFTKILL,# ROUGHKILL,# COMMENT
+Kill Tool Example,pkill example,pkill -9 example,
+Update Apps,sudo apt update,sudo apt upgrade -y,#not an intended purpose
