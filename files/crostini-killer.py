@@ -18,8 +18,8 @@ try:
 	with open("crostini-killer-config.csv", 'r', newline="") as file:
 		rawconfig = list(csv.reader(file))
 except Exception:
-	print("Error opening file. Quitting.")
-	time.sleep(3)
+	print("Error opening file. Are you sure it's in the correct location?\nQuitting.")
+	time.sleep(5)
 	sys.exit()
 
 # writes the data list
