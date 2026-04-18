@@ -14,8 +14,13 @@ userinput = None
 
 rawconfig = None
 # opens the csv and reads it
-with open("crostini-killer-config.csv", 'r', newline="") as file:
-	rawconfig = list(csv.reader(file))
+try:
+	with open("crostini-killer-config.csv", 'r', newline="") as file:
+		rawconfig = list(csv.reader(file))
+except Exception:
+	print("Error opening file. Quitting.")
+	time.sleep(3)
+	sys.exit()
 
 # writes the data list
 data = {}
