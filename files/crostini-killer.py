@@ -15,7 +15,7 @@ userinput = None
 rawconfig = None
 # opens the csv and reads it
 with open("crostini-killer-config.csv", 'r', newline="") as file:
-	rawconfig = csv.reader(file)
+	rawconfig = list(csv.reader(file))
 
 # writes the data list
 data = {}
