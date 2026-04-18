@@ -25,6 +25,7 @@ if [ ! -f $HOME/.local/share/applications/crostini-killer.desktop ]; then
     
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "Adding shortcut!"
+        mkdir -p ~/.local/share/icons/
         curl -sSL "$RAW_URL/icon.png" -o ~/.cH24-Apps/Crostini-Killer/icon.png
 cat <<EOF > "$SHORTCUT_PATH"
 [Desktop Entry]
