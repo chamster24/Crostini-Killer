@@ -15,7 +15,7 @@ echo "Crostini-Killer Installed/Updated!"
 
 # check to see if the config file is already there
 if [ ! -f ~/.cH24-Apps/Crostini-Killer/crostini-killer-config.csv ]; then
-  curl -sSL "$RAW_URL/crostini-killer-Config.csv" -o ~/.cH24-Apps/Crostini-Killer/crostini-killer-config.csv
+  curl -sSL "$RAW_URL/crostini-killer-config.csv" -o ~/.cH24-Apps/Crostini-Killer/crostini-killer-config.csv
   echo "Installed template config file!"
 fi
 
