@@ -5,6 +5,9 @@ RAW_URL="https://raw.githubusercontent.com/chamster24/Crostini-Killer/main/files
 # Make the folder
 mkdir -p ~/.cH24-Apps/Crostini-Killer/
 
+sudo apt update && sudo apt install -y python3
+echo "Installed Python3"
+
 # Copy the python script
 curl -sSL "$RAW_URL/crostini-killer.py" -o ~/.cH24-Apps/Crostini-Killer/crostini-killer.py
 chmod +x ~/.cH24-Apps/Crostini-Killer/crostini-killer.py
@@ -27,17 +30,20 @@ if [ ! -f $HOME/.local/share/applications/crostini-killer.desktop ]; then
         echo "Adding shortcut!"
         mkdir -p ~/.local/share/icons/
         curl -sSL "$RAW_URL/icon.png" -o ~/.cH24-Apps/Crostini-Killer/icon.png
+        APP_DIR="$HOME/.cH24-Apps/Crostini-Killer"
+        SHORTCUT_PATH="$HOME/.local/share/applications/crostini-killer.desktop"
 cat <<EOF > "$SHORTCUT_PATH"
 [Desktop Entry]
 Name=Crostini Killer
 Comment=User-friendly task manager app
-Exec=bash -c "cd /home/$USER/.cH24-Apps/Crostini-Killer/ && /usr/bin/python3 crostini-killer.py; echo 'Press enter to close'; read"
-Path=$HOME/.cH24-Apps/Crostini-Killer/
-Icon=$HOME/.cH24-Apps/Crostini-Killer/icon.png
+Exec=bash -c "cd $APP_DIR && python3 crostini-killer.py; echo '----------------'; read -p 'Task Complete. Press Enter to exit.' -r"
+Icon=$APP_DIR/icon.png
 Terminal=true
 Type=Application
 Categories=System;
 EOF
+
+chmod +x "$SHORTCUT_PATH"
     else
         echo "Skipped."
     fi
