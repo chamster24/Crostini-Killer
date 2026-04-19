@@ -31,7 +31,7 @@ cat <<EOF > "$SHORTCUT_PATH"
 [Desktop Entry]
 Name=Crostini Killer
 Comment=User-friendly task manager app
-Exec=python3 $HOME/.cH24-Apps/Crostini-Killer/crostini-killer.py
+Exec=bash -c "cd /home/$USER/.cH24-Apps/Crostini-Killer/ && /usr/bin/python3 crostini-killer.py; echo 'Press enter to close'; read"
 Path=$HOME/.cH24-Apps/Crostini-Killer/
 Icon=$HOME/.cH24-Apps/Crostini-Killer/icon.png
 Terminal=true
