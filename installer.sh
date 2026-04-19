@@ -19,34 +19,47 @@ if [ ! -f ~/.cH24-Apps/Crostini-Killer/crostini-killer-config.csv ]; then
   echo "Installed template config file!"
 fi
 
-# checks for shortcut, if no, prompts to install
-if [ ! -f $HOME/.local/share/applications/crostini-killer.desktop ]; then
-  SHORTCUT_PATH=$HOME/.local/share/applications/crostini-killer.desktop
-  echo "Would you like to add a shortcut to the taskbar? (type 'Y' if you do)"
-    read -n 1 -r  # waits for 1 character
-    echo ""       # Move to a new line after the keypress
-    
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "Adding shortcut!"
-        mkdir -p ~/.local/share/icons/
-        curl -sSL "$RAW_URL/icon.png" -o ~/.cH24-Apps/Crostini-Killer/icon.png
-        APP_DIR="$HOME/.cH24-Apps/Crostini-Killer"
-        SHORTCUT_PATH="$HOME/.local/share/applications/crostini-killer.desktop"
-cat <<EOF > "$SHORTCUT_PATH"
-[Desktop Entry]
-Name=Crostini Killer
-Comment=User-friendly task manager app
-Exec=bash -c "cd $APP_DIR && python3 crostini-killer.py; echo '----------------'; read -p 'Task Complete. Press Enter to exit.' -r"
-Icon=$APP_DIR/icon.png
-Terminal=true
-Type=Application
-Categories=System;
-EOF
+ALIAS_LINE="alias crostini-killer='python3 $HOME/.cH24-Apps/Crostini-Killer/crostini-killer.py'"
 
-chmod +x "$SHORTCUT_PATH"
-    else
-        echo "Skipped."
-    fi
+# check if the alias is already there
+if ! grep -q "alias crostini-killer=" ~/.bashrc; then
+    echo "" >> ~/.bashrc
+    echo "# Added by Crostini-Killer Installer" >> ~/.bashrc
+    echo "$ALIAS_LINE" >> ~/.bashrc
+    echo "Alias created! Type 'crostini-killer' to run the app."
 fi
+
+# Activiate the alias immediately
+eval "$ALIAS_LINE"
+
+# checks for shortcut, if no, prompts to install
+#if [ ! -f $HOME/.local/share/applications/crostini-killer.desktop ]; then
+#  SHORTCUT_PATH=$HOME/.local/share/applications/crostini-killer.desktop
+#  echo "Would you like to add a shortcut to the taskbar? (type 'Y' if you do)"
+#    read -n 1 -r  # waits for 1 character
+#    echo ""       # Move to a new line after the keypress
+    
+#    if [[ $REPLY =~ ^[Yy]$ ]]; then
+#        echo "Adding shortcut!"
+#        mkdir -p ~/.local/share/icons/
+#        curl -sSL "$RAW_URL/icon.png" -o ~/.cH24-Apps/Crostini-Killer/icon.png
+#        APP_DIR="$HOME/.cH24-Apps/Crostini-Killer"
+#        SHORTCUT_PATH="$HOME/.local/share/applications/crostini-killer.desktop"
+#cat <<EOF > "$SHORTCUT_PATH"
+#[Desktop Entry]
+#Name=Crostini Killer
+#Comment=User-friendly task manager app
+#Exec=bash -c "cd $APP_DIR && python3 crostini-killer.py; echo '----------------'; read -p 'Task Complete. Press Enter to exit.' -r"
+#Icon=$APP_DIR/icon.png
+#Terminal=true
+#Type=Application
+#Categories=System;
+#EOF
+
+#chmod +x "$SHORTCUT_PATH"
+#    else
+#        echo "Skipped."
+#    fi
+#fi
 
 echo "Download finished!"
