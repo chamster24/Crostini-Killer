@@ -62,4 +62,4 @@ eval "$ALIAS_LINE"
 #    fi
 #fi
 
-echo "Download finished!"
+echo "Download finished! Restart your terminal or run 'source ~/.bashrc' before typing 'crostini-killer' to start."
