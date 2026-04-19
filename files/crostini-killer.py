@@ -78,7 +78,7 @@ while True:
 				print("Invalid response, please retype!")
 	elif index == -2: # edit CSV
 		print("Error - feature not implemented!")
-		sys.sleep(3)
+		time.sleep(3)
 	elif index == -1: # Alt+F4 Linux
 		while True:
 			userinput = input("Are you sure you wish to shut down Linux? Y/N: (NOTE: THIS SCRIPT DOES NOT WORK AS INTENDED. IF YOU RUN IT LINUX WON'T OPEN UNTIL YOU RESTART.)")
