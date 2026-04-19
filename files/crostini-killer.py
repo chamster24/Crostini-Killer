@@ -32,14 +32,13 @@ except Exception:
 data = {}
 datakeys = []
 for line in rawconfig:
-	if not str(line[0])[0] == "#":
+	if line and not str(line[0])[0] == "#":
 		if not str(line[0]) in datakeys:
 			datakeys.append(str(line[0]))
 		try:
 			data[str(line[0])] = [str(line[1]), str(line[2])]
 		except Exception:
 			pass
-
 
 # main system process
 while True:
