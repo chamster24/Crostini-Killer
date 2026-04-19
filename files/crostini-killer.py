@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 7"
+version = "V1.0.0 PreRelease Alpha Build 8"
 
 import psutil
 import os
