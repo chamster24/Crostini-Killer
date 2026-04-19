@@ -12,10 +12,16 @@ import csv
 import time
 userinput = None
 
+# ANSI Escape Sequences
+fullscreenwipe = "\033c" # also resets colors
+clearscreen = "\033[2J" # leaves cursor be
+
 rawconfig = None
 # opens the csv and reads it
 try:
-	with open("crostini-killer-config.csv", 'r', newline="") as file:
+	base_path = os.path.dirname(__file__)
+	config_path = os.path.join(base_path, "crostini-killer-config.csv")
+	with open(config_path, 'r', newline="") as file:
 		rawconfig = list(csv.reader(file))
 except Exception:
 	print("Error opening file. Are you sure it's in the correct location?\nQuitting.")
@@ -34,8 +40,10 @@ for line in rawconfig:
 		except Exception:
 			pass
 
+
 # main system process
 while True:
+	print(fullscreenwipe, end="")
 	print(f"Crostini Killer {version}")
 	
 	message = "\n1. Exit program\n2. Edit config file\n3. Shut down Linux"
