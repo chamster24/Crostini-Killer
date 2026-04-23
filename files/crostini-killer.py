@@ -24,7 +24,12 @@ try:
 	with open(config_path, 'r', newline="") as file:
 		rawconfig = list(csv.reader(file))
 except Exception:
-	print("Error opening file. Are you sure it's in the same folder as this program?\nQuitting.")
+	print("Error opening file. Are you sure it's in the same folder as this program?\nQuitting...")
+	time.sleep(5)
+	sys.exit(66)
+
+if not rawconfig:
+	print("Config file is empty!\nQuitting...")
 	time.sleep(5)
 	sys.exit(66)
 
@@ -38,7 +43,9 @@ for line in rawconfig:
 		try:
 			data[str(line[0])] = [str(line[1]), str(line[2])]
 		except Exception:
-			pass
+			print("Something seems to be wrong with the config file! Check that formatting is correct.\nQuitting...")
+			time.sleep(5)
+			sys.exit(65)
 
 # main system process
 while True:
