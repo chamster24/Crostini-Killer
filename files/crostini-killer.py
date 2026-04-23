@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 8"
+version = "V1.0.0 PreRelease Alpha Build 9"
 
 import psutil
 import os
@@ -24,9 +24,9 @@ try:
 	with open(config_path, 'r', newline="") as file:
 		rawconfig = list(csv.reader(file))
 except Exception:
-	print("Error opening file. Are you sure it's in the correct location?\nQuitting.")
+	print("Error opening file. Are you sure it's in the same folder as this program?\nQuitting.")
 	time.sleep(5)
-	sys.exit()
+	sys.exit(66)
 
 # writes the data list
 data = {}
@@ -43,7 +43,7 @@ for line in rawconfig:
 # main system process
 while True:
 	print(fullscreenwipe, end="")
-	print(f"Crostini Killer {version}")
+	print(f"Crostini Killer {version}\n")
 	
 	message = "\n1. Exit program\n2. Edit config file\n3. Shut down Linux"
 	n = 4
@@ -66,6 +66,7 @@ while True:
 	index = userinputint - 4
 	
 	if index == -3: # quit
+		print(clearscreen)
 		while True:
 			userinput = input("Are you sure you wish to exit? Y/N: ")
 			if userinput.upper() == "Y":
@@ -74,13 +75,16 @@ while True:
 				print("Returning to menu")
 				break
 			else:
-				print("Invalid response, please retype!")
+				print("Invalid response, please retype!\n")
+				time.sleep(1)
 	elif index == -2: # edit CSV
+		print(clearscreen)
 		print("Error - feature not implemented!")
 		time.sleep(3)
 	elif index == -1: # Alt+F4 Linux
+		print(clearscreen)
 		while True:
-			userinput = input("Are you sure you wish to shut down Linux? Y/N: (NOTE: THIS SCRIPT DOES NOT WORK AS INTENDED. IF YOU RUN IT LINUX WON'T OPEN UNTIL YOU RESTART.)")
+			userinput = input("Are you sure you wish to shut down Linux? (NOTE: THIS SCRIPT DOES NOT WORK AS INTENDED. IF YOU RUN IT LINUX WON'T OPEN UNTIL YOU RESTART.) Y/N: ")
 			if userinput.upper() == "Y":
 				print("Now asking Linux to shutdown...")
 				os.system("sudo shutdown -h now")
@@ -91,7 +95,8 @@ while True:
 				time.sleep(1)
 				break
 			else:
-				print("Invalid response, please retype!")
+				print("Invalid response, please retype!\n")
+				time.sleep(1)
 				
 	else:
 		softkill = data[datakeys[index]][0]
@@ -101,7 +106,7 @@ while True:
 		while True:
 			if completed:
 				break
-			userinput = input(f"Choose how to kill {datakeys[index]}:\n\n1. Softkill (asking it nicely, '{softkill}')\n\n2. Hardkill (tactical nuke, risks loosing data, '{hardkill}')\n\n3. Nevermind, get me out of here (return to menu)")
+			userinput = input(f"Choose how to kill {datakeys[index]}:\n\n1. Softkill (asking it nicely, '{softkill}')\n\n2. Hardkill (tactical nuke, risks loosing data, '{hardkill}')\n\n3. Nevermind, get me out of here (return to menu)\n\nSelect an option: ")
 			try:
 				userinputint = int(userinput)
 				if (userinputint <= 2) and (userinputint != 0):
@@ -126,14 +131,15 @@ while True:
 								time.sleep(1)
 								break
 							else:
-								print("Invalid response, please retype!")
+								print("Invalid response, please retype!\n")
+								time.sleep(1)
 				elif userinputint == 3:
 					print("Returning to menu")
 					time.sleep(1)
 					break
 				else:
-					print("Invalid option!")
-					time.sleep(0.5)
+					print("Invalid option!\n")
+					time.sleep(1)
 			except Exception:
-				print("Error - Potentially invalid option")
-				time.sleep(0.5)
+				print("An error occured.")
+				time.sleep(1)
