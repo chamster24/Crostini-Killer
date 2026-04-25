@@ -15,18 +15,20 @@ jobs:
 
       - name: Build Package
         run: |
-          # 1. Clean the version: remove 'v' and replace '-' with '~' for Debian compatibility
+          # Clean version for Debian compatibility (v1.0.0-alpha -> 1.0.0~alpha)
           CLEAN_VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//' | sed 's/-/~/g')
           
+          # Create the Debian directory structure
           mkdir -p build/DEBIAN
           mkdir -p build/usr/local/bin
           mkdir -p build/opt/crostini-killer
           mkdir -p build/usr/share/applications
           
-          cp crostini-killer.py build/opt/crostini-killer/
-          cp crostini-killer-config.csv build/opt/crostini-killer/
+          # COPY FROM THE /files/ DIRECTORY
+          cp files/crostini-killer.py build/opt/crostini-killer/
+          cp files/crostini-killer-config.csv build/opt/crostini-killer/
           
-          # 2. Create control file
+          # Create control file
           cat <<EOF > build/DEBIAN/control
           Package: crostini-killer
           Version: ${CLEAN_VERSION}
@@ -37,17 +39,17 @@ jobs:
           Description: Task killer for Crostini
           EOF
 
-          # 3. Create launcher
+          # Create the terminal launcher wrapper
           echo -e "#!/bin/bash\npython3 /opt/crostini-killer/crostini-killer.py" > build/usr/local/bin/crostini-killer
           chmod +x build/usr/local/bin/crostini-killer
 
-          # 4. Create desktop entry
+          # Create the desktop shortcut
           echo -e "[Desktop Entry]\nName=Crostini Killer\nExec=crostini-killer\nTerminal=true\nType=Application\nCategories=System;" > build/usr/share/applications/crostini-killer.desktop
 
-          # 5. Build
+          # Build the debian package
           dpkg-deb --build build crostini-killer.deb
 
-      - name: Create Release
+      - name: Upload to Release
         uses: softprops/action-gh-release@v1
         with:
           files: crostini-killer.deb
