@@ -1,48 +1,59 @@
 name: Build Debian Package
 on:
-	push:
-		tags:
-			- 'v*'
+  push:
+    tags:
+      - 'v*'
+
+# Grant write permissions for the release
+permissions:
+  contents: write
 
 jobs:
-	build:
-		runs-on: ubuntu-latest
-		steps:
-			- uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-			- name: Build Package
-				run: |
-					mkdir -p build/DEBIAN
-					mkdir -p build/usr/local/bin
-					mkdir -p build/opt/crostini-killer
-					mkdir -p build/usr/share/applications
-					
-					# Copy your files
-					cp crostini-killer.py build/opt/crostini-killer/
-					cp crostini-killer-config.csv build/opt/crostini-killer/
-					
-					# Create control file
-					echo "Package: crostini-killer" > build/DEBIAN/control
-					echo "Version: ${{ github.ref_name }}" >> build/DEBIAN/control
-					echo "Section: utils" >> build/DEBIAN/control
-					echo "Priority: optional" >> build/DEBIAN/control
-					echo "Architecture: all" >> build/DEBIAN/control
-					echo "Maintainer: cHamster24" >> build/DEBIAN/control
-					echo "Description: Task killer for Crostini" >> build/DEBIAN/control
+      - name: Build Package
+        run: |
+          # Remove the 'v' from the tag name for Debian compatibility
+          CLEAN_VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          
+          mkdir -p build/DEBIAN
+          mkdir -p build/usr/local/bin
+          mkdir -p build/opt/crostini-killer
+          mkdir -p build/usr/share/applications
+          
+          cp crostini-killer.py build/opt/crostini-killer/
+          cp crostini-killer-config.csv build/opt/crostini-killer/
+          
+          # Control file with cleaned version
+          cat <<EOF > build/DEBIAN/control
+          Package: crostini-killer
+          Version: ${CLEAN_VERSION}
+          Section: utils
+          Priority: optional
+          Architecture: all
+          Maintainer: cHamster24
+          Description: Task killer for Crostini
+          EOF
 
-					# Create the terminal launcher
-					echo -e "#!/bin/bash\npython3 /opt/crostini-killer/crostini-killer.py" > build/usr/local/bin/crostini-killer
-					chmod +x build/usr/local/bin/crostini-killer
+          # Create the terminal launcher
+          echo -e "#!/bin/bash\npython3 /opt/crostini-killer/crostini-killer.py" > build/usr/local/bin/crostini-killer
+          chmod +x build/usr/local/bin/crostini-killer
 
-					# Create the desktop shortcut
-					echo -e "[Desktop Entry]\nName=Crostini Killer\nExec=crostini-killer\nTerminal=true\nType=Application\nCategories=System;" > build/usr/share/applications/crostini-killer.desktop
+          # Create the desktop shortcut
+          echo -e "[Desktop Entry]\nName=Crostini Killer\nExec=crostini-killer\nType=Application\nTerminal=true\nCategories=System;" > build/usr/share/applications/crostini-killer.desktop
 
-					# Build the deb
-					dpkg-deb --build build crostini-killer.deb
+          # Build the deb
+          dpkg-deb --build build crostini-killer.deb
 
-			- name: Create Release
-				uses: softprops/action-gh-release@v1
-				with:
-					files: crostini-killer.deb
-				env:
-					GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: crostini-killer.deb
+          # This ensures it works even if you haven't manually created the release
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
