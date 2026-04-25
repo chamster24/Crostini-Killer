@@ -3,13 +3,14 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 9"
+version = "V1.0.0 PreRelease Alpha Build 10"
 
 import psutil
 import os
 import sys
 import csv
 import time
+import subprocess
 userinput = None
 
 # ANSI Escape Sequences
@@ -46,6 +47,28 @@ for line in rawconfig:
 			print("Something seems to be wrong with the config file! Check that formatting is correct.\nQuitting...")
 			time.sleep(5)
 			sys.exit(65)
+
+def runcommand(command):
+	timeout = 10
+	try:
+		subprocess.run(command, shell=True, check=True, capture_output=True, text=True, timeout=int(timeout)) # in future, timeout will be a user selected variable in a sys config file
+	except subprocess.CalledProcessError as e:
+		input(f"""An error occured while running "subprocess.run({command})". See error below:
+\nCommand Failed: {e.cmd}
+Exit Code: {e.returncode}
+Terminal said: {e.stderr}
+\nPress ENTER to continue: """)
+	except subprocess.TimeoutExpired:
+		input(f"The process ran but hang (exceeded {timeout} seconds).\n\nPress ENTER to continue: ")		
+	except Exception:
+		userinput = input("subprocess.run() failed. Using backup os.system()... PRESS ENTER TO QUIT, PRESS ANY KEY + ENTER TO RUN \"os.system()\"")
+		if not ((userinput == None) or (userinput == "")):
+			print("Using outdated \"os.system()\"")
+			time.sleep(1)
+			os.system(command)
+		else:
+			print("Not running \"os.system()\", returning...")
+			time.sleep(1)
 
 # main system process
 while True:
@@ -94,7 +117,7 @@ while True:
 			userinput = input("Are you sure you wish to shut down Linux? (NOTE: THIS SCRIPT DOES NOT WORK AS INTENDED. IF YOU RUN IT LINUX WON'T OPEN UNTIL YOU RESTART.) Y/N: ")
 			if userinput.upper() == "Y":
 				print("Now asking Linux to shutdown...")
-				os.system("sudo shutdown -h now")
+				runcommand("sudo shutdown -h now")
 				time.sleep(10)
 				sys.exit()
 			elif userinput.upper() == "N":
@@ -119,7 +142,7 @@ while True:
 				if (userinputint <= 2) and (userinputint != 0):
 					if userinputint == 1:
 						print(f"Shutting down process (softkill) with command '{softkill}'...")
-						os.system(softkill)
+						runcommand(softkill)
 						completed = True
 						time.sleep(3)
 						break
@@ -129,7 +152,7 @@ while True:
 							userinput = input("Are you sure you wish to tell Linux to nuke this program? Y/N: ")
 							if userinput.upper() == "Y":
 								print(f"Hardkilling with command '{hardkill}'...")
-								os.system(hardkill)
+								runcommand(hardkill)
 								completed = True
 								time.sleep(3)
 								break
