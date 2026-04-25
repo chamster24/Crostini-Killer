@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 10"
+version = "V1.0.0 PreRelease Alpha Build 11"
 
 import psutil
 import os
@@ -56,13 +56,13 @@ def runcommand(command):
 		input(f"""An error occured while running "subprocess.run({command})". See error below:
 \nCommand Failed: {e.cmd}
 Exit Code: {e.returncode}
-Terminal said: {e.stderr}
+Terminal said: {e.stderr.strip() or "No error output provided."}
 \nPress ENTER to continue: """)
 	except subprocess.TimeoutExpired:
 		input(f"The process ran but hang (exceeded {timeout} seconds).\n\nPress ENTER to continue: ")		
 	except Exception:
 		userinput = input("subprocess.run() failed. Using backup os.system()... PRESS ENTER TO QUIT, PRESS ANY KEY + ENTER TO RUN \"os.system()\"")
-		if not ((userinput == None) or (userinput == "")):
+		if userinput.strip() != "":
 			print("Using outdated \"os.system()\"")
 			time.sleep(1)
 			os.system(command)
