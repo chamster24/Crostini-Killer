@@ -1,0 +1,48 @@
+name: Build Debian Package
+on:
+	push:
+		tags:
+			- 'v*'
+
+jobs:
+	build:
+		runs-on: ubuntu-latest
+		steps:
+			- uses: actions/checkout@v3
+
+			- name: Build Package
+				run: |
+					mkdir -p build/DEBIAN
+					mkdir -p build/usr/local/bin
+					mkdir -p build/opt/crostini-killer
+					mkdir -p build/usr/share/applications
+					
+					# Copy your files
+					cp crostini-killer.py build/opt/crostini-killer/
+					cp crostini-killer-config.csv build/opt/crostini-killer/
+					
+					# Create control file
+					echo "Package: crostini-killer" > build/DEBIAN/control
+					echo "Version: ${{ github.ref_name }}" >> build/DEBIAN/control
+					echo "Section: utils" >> build/DEBIAN/control
+					echo "Priority: optional" >> build/DEBIAN/control
+					echo "Architecture: all" >> build/DEBIAN/control
+					echo "Maintainer: cHamster24" >> build/DEBIAN/control
+					echo "Description: Task killer for Crostini" >> build/DEBIAN/control
+
+					# Create the terminal launcher
+					echo -e "#!/bin/bash\npython3 /opt/crostini-killer/crostini-killer.py" > build/usr/local/bin/crostini-killer
+					chmod +x build/usr/local/bin/crostini-killer
+
+					# Create the desktop shortcut
+					echo -e "[Desktop Entry]\nName=Crostini Killer\nExec=crostini-killer\nTerminal=true\nType=Application\nCategories=System;" > build/usr/share/applications/crostini-killer.desktop
+
+					# Build the deb
+					dpkg-deb --build build crostini-killer.deb
+
+			- name: Create Release
+				uses: softprops/action-gh-release@v1
+				with:
+					files: crostini-killer.deb
+				env:
+					GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
