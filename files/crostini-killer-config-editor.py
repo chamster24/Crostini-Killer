@@ -34,7 +34,7 @@ while True:
   pass
 
 # Script to write it
-def savechanges():
+def savechanges(): #add making a temp file, and using that temp file to replace the directory instead
   try:
     with open(config_path, "w", newline="") as file:
       writer = csv.writer(file)
