@@ -109,7 +109,7 @@ while True:
 	if userinput.isdigit() and int(userinput) == 1:
 		readcsv()
 	elif userinput.isdigit() and int(userinput) == 2:
-		editcsv()	
+		curses.wrapper(editcsv)	
 	elif userinput.isdigit() and int(userinput) == 3:
 		help()
 	elif userinput.isdigit() and int(userinput) == 4:
