@@ -66,10 +66,10 @@ def editcsv():
 			ch = stdscr.getch()
 			if ch == curses.KEY_UP:
 				if csv_cursor_y > 0:
-					csv_cursor_y += 1
+					csv_cursor_y -= 1
 			if ch == curses.KEY_DOWN:
 				if csv_cursor_y < csv_max_y:
-					csv_cursor_y -= 1
+					csv_cursor_y += 1
 			if ch == curses.KEY_LEFT:
 				if csv_cursor_x > 0:
 					csv_cursor_x -= 1
