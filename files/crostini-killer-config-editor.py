@@ -76,7 +76,7 @@ def editcsv():
 			if ch == curses.KEY_RIGHT:
 				if csv_cursor_x < csv_max_x:
 					csv_cursor_x += 1
-            if ch == 27: # Esc key
+            if ch == 27: # Esc key, REWRITE to make a esc() key function that allows for WASD navigation if they dont have wasd, same for hjkl, and also esc + q to actually quit
 				print("Quitting...")
 				time.sleep(1.5)
                 break
