@@ -76,7 +76,7 @@ def editcsv():
 			if ch == curses.KEY_RIGHT:
 				if csv_cursor_x < csv_max_x:
 					csv_cursor_x += 1
-            if ch == curses.ESCAPE:
+            if ch == 27: # Esc key
 				print("Quitting...")
 				time.sleep(1.5)
                 break
