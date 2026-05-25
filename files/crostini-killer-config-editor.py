@@ -42,8 +42,11 @@ def savechanges(): #add making a temp file, and using that temp file to replace 
 		print("An error occured while writing to the config file!")
 		
 # Define main processes
-def readcsv():
-	pass
+
+def readcsv(): # TODO: Later on, integrate this with curses and terminal's char width/height to make a display entirely readable with arrow keys
+	for row in rawconfig:
+		print(*row, sep=",")
+	input("Press ENTER to continue:")
 
 def editcsv():
 	global keylist
@@ -51,35 +54,29 @@ def editcsv():
 	curses.filter()
 	stdscr = curses.initscr()
 	stdscr.keypad(True)
+	# set cursor pos
+	csv_cursor_x = 1
+	csv_cursor_y = 1
+	# set grid lim
+	csv_max_x = 4 - 1 # name, softkill, hardkill, comment
+	csv_max_y = len(rawconfig) - 1
 
-	try:
+	try: #revise
 		while True:
 			ch = stdscr.getch()
 			if ch == curses.KEY_UP:
-				if not "UP" in keylist:
-					keylist.append("UP")
-			else:
-				if "UP" in keylist:
-					keylist.remove("UP")
+				if csv_cursor_y > 0:
+					csv_cursor_y += 1
 			if ch == curses.KEY_DOWN:
-				if not "DN" in keylist:
-					keylist.append("DN")
-			else:
-				if "DN" in keylist:
-					keylist.remove("DN")
+				if csv_cursor_y < csv_max_y:
+					csv_cursor_y -= 1
 			if ch == curses.KEY_LEFT:
-				if not "LT" in keylist:
-					keylist.append("LT")
-			else:
-				if "LT" in keylist:
-					keylist.remove("LT")
+				if csv_cursor_x > 0:
+					csv_cursor_x -= 1
 			if ch == curses.KEY_RIGHT:
-				if not "RT" in keylist:
-					keylist.append("RT")
-			else:
-				if "RT" in keylist:
-					keylist.remove("RT")
-            		if ch == curses.ESCAPE:
+				if csv_cursor_x < csv_max_x:
+					csv_cursor_x += 1
+            if ch == curses.ESCAPE:
 				print("Quitting...")
 				time.sleep(1.5)
                 break
