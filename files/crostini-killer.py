@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 11"
+version = "V1.0.0 PreRelease Alpha Build 12"
 
 import psutil
 import os
@@ -38,15 +38,24 @@ if not rawconfig:
 data = {}
 datakeys = []
 for line in rawconfig:
-	if line and not str(line[0])[0] == "#":
+	if line and line[0].strip() != "" and not (str(line[0]).strip()).startswith("#"):
 		if not str(line[0]) in datakeys:
 			datakeys.append(str(line[0]))
 		try:
 			data[str(line[0])] = [str(line[1]), str(line[2])]
-		except Exception:
-			print("Something seems to be wrong with the config file! Check that formatting is correct.\nQuitting...")
-			time.sleep(5)
-			sys.exit(65)
+		except Exception: # line is "abc,abc"
+			try: 
+				data[str(line[0])] = [str(line[1]), ""]
+			except Exception: # line is "abc"
+				try: 
+					data[str(line[0])] = ["", ""]
+				except Exception:
+					pass #skips doing this line
+					"""
+						print("Something seems to be wrong with the config file! Please check that formatting is correct.\nQuitting...")
+						time.sleep(5)
+						sys.exit(65)
+					"""
 
 def runcommand(command):
 	timeout = 10
@@ -55,8 +64,8 @@ def runcommand(command):
 	except subprocess.CalledProcessError as e:
 		input(f"""An error occured while running "subprocess.run({command})". See error below:
 \nCommand Failed: {e.cmd}
-Exit Code: {e.returncode}
-Terminal said: {e.stderr.strip() or "No error output provided."}
+\nExit Code: {e.returncode}
+\nTerminal said: {e.stderr.strip() or "No error output provided."}
 \nPress ENTER to continue: """)
 	except subprocess.TimeoutExpired:
 		input(f"The process ran but hang (exceeded {timeout} seconds).\n\nPress ENTER to continue: ")		
@@ -129,8 +138,24 @@ while True:
 				time.sleep(1)
 				
 	else:
-		softkill = data[datakeys[index]][0]
-		hardkill = data[datakeys[index]][1]
+		if (data[datakeys[index]][0]).strip() == "": # assume name of kill program is the same as the pid
+			softkill = str(f"pkill {datakeys[index]}")
+		elif ((data[datakeys[index]][0]).strip()).startswith("!"): # custom command
+			softkill = ((data[datakeys[index]][0]).strip())[1:]
+		elif ((data[datakeys[index]][0]).strip()).startswith("#"): # comment
+			softkill = str(f"# COMMENT (NO REAL CODE): '{((data[datakeys[index]][0]).strip())[1:]}'")
+		else: # set pkill to PID put inside the row
+			softkill = str(f"pkill {data[datakeys[index]][0]}")
+
+		if (data[datakeys[index]][1]).strip() == "": # assume name of kill program is the same as the pid
+			hardkill = str(f"pkill -9 {datakeys[index]}")
+		elif ((data[datakeys[index]][1]).strip()).startswith("!"): # custom command
+			hardkill = ((data[datakeys[index]][1]).strip())[1:]
+		elif ((data[datakeys[index]][1]).strip()).startswith("#"): # comment
+			hardkill = str(f"# COMMENT (NO REAL CODE): '{((data[datakeys[index]][1]).strip())[1:]}'")
+		else: # set pkill to PID put inside the row
+			hardkill = str(f"pkill -9 {data[datakeys[index]][1]}")
+	
 
 		completed = False
 		while True:
