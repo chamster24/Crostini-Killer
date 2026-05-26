@@ -13,6 +13,7 @@ import subprocess
 import curses
 userinput = None
 keylist = []
+os.environ.setdefault('ESCDELAY', '10')
 
 # ANSI Escape Sequences
 fullscreenwipe = "\033c" # also resets colors
@@ -48,6 +49,29 @@ def readcsv(): # TODO: Later on, integrate this with curses and terminal's char 
 		print(*row, sep=",")
 	input("Press ENTER to continue:")
 
+def escapekey():
+	# add script to add guide while still showing part of the grid
+	while True:
+		if ch == 27: #escape key
+			break #exits function
+		if (ch == ord('1')) or (ch == ord('a')): # quit
+			print("Quitting...")
+			time.sleep(1.5)
+			break
+		if (ch == ord('h')) or (ch == ord('a')): # left
+			if csv_cursor_x > 0:
+				csv_cursor_x -= 1
+		if (ch == ord('l')) or (ch == ord('d')): # right
+			if csv_cursor_x < csv_max_x:
+				csv_cursor_x += 1
+		if (ch == ord('j')) or (ch == ord('s')): # down
+			if csv_cursor_y < csv_max_y:
+				csv_cursor_y += 1
+		if (ch == ord('k')) or (ch == ord('w')): # left
+			if csv_cursor_y > 0:
+				csv_cursor_y -= 1
+		
+
 def editcsv():
 	global keylist
 	# Add script to move the edit cursor to the latest
@@ -77,9 +101,7 @@ def editcsv():
 				if csv_cursor_x < csv_max_x:
 					csv_cursor_x += 1
             if ch == 27: # Esc key, REWRITE to make a esc() key function that allows for WASD navigation if they dont have wasd, same for hjkl, and also esc + q to actually quit
-				print("Quitting...")
-				time.sleep(1.5)
-                break
+				escapekey()
 	finally:
 	        # 3. Clean up
 	        curses.endwin()
