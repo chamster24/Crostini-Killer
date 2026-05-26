@@ -53,11 +53,11 @@ def escapekey():
 	# add script to add guide while still showing part of the grid
 	while True:
 		if ch == 27: #escape key
-			break #exits function
-		if (ch == ord('1')) or (ch == ord('a')): # quit
+			break #exits function, return to program
+		if ch == ord('q'): # quit
 			print("Quitting...")
 			time.sleep(1.5)
-			break
+			
 		if (ch == ord('h')) or (ch == ord('a')): # left
 			if csv_cursor_x > 0:
 				csv_cursor_x -= 1
