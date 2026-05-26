@@ -44,10 +44,10 @@ for line in rawconfig:
 		try:
 			data[str(line[0])] = [str(line[1]), str(line[2])]
 		except Exception: # line is "abc,abc"
-			try: 
+			try:
 				data[str(line[0])] = [str(line[1]), ""]
 			except Exception: # line is "abc"
-				try: 
+				try:
 					data[str(line[0])] = ["", ""]
 				except Exception:
 					pass #skips doing this line
