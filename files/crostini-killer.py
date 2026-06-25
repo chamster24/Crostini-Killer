@@ -74,10 +74,16 @@ if settings["terminal_mode"] == 1:
 elif settings["terminal_mode"] == 0:
 	def clearscreen():
 		print("=" * terminal_width)
-	def fullscreenwipe():
-		print("-+" * math.floor(terminal_width / 2))
-		print("=" * terminal_width)
-		print("-+" * math.floor(terminal_width / 2))
+	if terminal_width % 2 = 0:
+		def fullscreenwipe():
+			print("-+" * (terminal_width / 2))
+			print("=" * terminal_width)
+			print("-+" * (terminal_width / 2))
+	else:
+		def fullscreenwipe():
+			print(("-+" * math.floor(terminal_width / 2)) + "-")
+			print("=" * terminal_width)
+			print(("-+" * math.floor(terminal_width / 2)) + "-")
 else:
 	settingsfileerror("Missing/non-binary value for terminal_mode")
 	
