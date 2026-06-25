@@ -6,6 +6,7 @@
 version = "V1.0.0 PreRelease Alpha Build 14"
 
 # import psutil # requires pip
+import math
 import shutil
 import os
 import sys
@@ -17,8 +18,8 @@ userinput = None
 terminal_width, terminal_height = shutil.get_terminal_size()
 
 # ANSI Escape Sequences
-fullscreenwipe = "\033c" # also resets colors
-clearscreen = "\033[2J" # leaves cursor be
+ansi_fullscreenwipe = "\033c" # also resets colors
+ansi_clearscreen = "\033[2J" # leaves cursor be
 
 rawconfig = None
 # opens the csv and reads it
@@ -65,12 +66,18 @@ settings = {
 	"terminal_mode": 1
 }
 
-if terminal_mode == 1:
+if settings["terminal_mode"] == 1:
 	def clearscreen():
-		print(clearscreen)
-elif terminal_mode == 0:
+		print(ansi_clearscreen, end="")
+	def fullscreenwipe():
+		print(ansi_fullscreenwipe, end="")
+elif settings["terminal_mode"] == 0:
 	def clearscreen():
 		print("=" * terminal_width)
+	def fullscreenwipe():
+		print("-+" * math.floor(terminal_width / 2))
+		print("=" * terminal_width)
+		print("-+" * math.floor(terminal_width / 2))
 else:
 	settingsfileerror("Missing/non-binary value for terminal_mode")
 	
@@ -129,7 +136,7 @@ def runcommand(command):
 
 # main system process
 while True:
-	print(fullscreenwipe, end="")
+	fullscreenwipe()
 	print(f"Crostini Killer {version}\n")
 	
 	message = "\n1. Exit program\n2. Edit config file\n3. Shut down Linux"
