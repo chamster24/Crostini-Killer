@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 16.1"
+version = "V1.0.0 PreRelease Alpha Build 16.1.1"
 
 # import psutil # requires pip
 import math
@@ -18,8 +18,8 @@ userinput = None
 terminal_width, terminal_height = shutil.get_terminal_size()
 
 # ANSI Escape Sequences
-ansi_fullscreenwipe = "\033c" # also resets colors
-ansi_clearscreen = "\033[2J" # leaves cursor be
+ansi_fullscreenwipe = "\033c" # also resets colors (full terminal reset)
+ansi_clearscreen = "\033[2J\033[H" # \033[2J wipes screen and \033[H moves cursor to top left
 
 rawconfig = None
 # opens the csv and reads it
