@@ -3,15 +3,18 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 12"
+version = "V1.0.0 PreRelease Alpha Build 14"
 
 # import psutil # requires pip
+import shutil
 import os
 import sys
 import csv
 import time
 import subprocess
 userinput = None
+
+terminal_width, terminal_height = shutil.get_terminal_size()
 
 # ANSI Escape Sequences
 fullscreenwipe = "\033c" # also resets colors
@@ -25,7 +28,7 @@ try:
 	with open(config_path, 'r', newline="") as file:
 		rawconfig = list(csv.reader(file))
 except Exception:
-	print("Error opening file. Are you sure it's in the same folder as this program?\nQuitting...")
+	print("Error opening config file. Are you sure it's in the same folder as this program?\nQuitting...")
 	time.sleep(5)
 	sys.exit(66)
 
@@ -34,11 +37,48 @@ if not rawconfig:
 	time.sleep(5)
 	sys.exit(66)
 
+# FUTURE - READS SETTINGS FILE
+"""
+try:
+	base_path = os.path.dirname(__file__)
+	settings_path = os.path.join(base_path, "crostini-killer-settings.csv")
+	with open(settings_path, 'r', newline="") as file:
+		rawsettings = list(csv.reader(file))
+except Exception:
+	print("Error opening settings file. Are you sure it's in the same folder as this program?\nQuitting...")
+	time.sleep(5)
+	sys.exit(66)
+
+# add check to see if settings file is malformed
+"""
+
+def settingsfileerror(error_details):
+	try:
+		clearscreen()
+	except Exception:
+		print("=" * terminal_width)
+	input(f"There is an error with the settings file! Check info below:\n\nProgram said: \"{error_details}\"\n\nPress ENTER to quit: ")
+	sys.exit(65)
+
+# in future, check if TERMINAL MODE is ON or OFF
+settings = {
+	"terminal_mode": 1
+}
+
+if terminal_mode == 1:
+	def clearscreen():
+		print(clearscreen)
+elif terminal_mode == 0:
+	def clearscreen():
+		print("=" * terminal_width)
+else:
+	settingsfileerror("Missing/non-binary value for terminal_mode")
+	
 # writes the data list
 data = {}
 datakeys = []
 for line in rawconfig:
-	if line and line[0].strip() != "" and not (str(line[0]).strip()).startswith("#"):
+	if line and line[0].strip() != "" and not (str(line[0]).strip()).startswith("#"): # check if it's not a comment line
 		if not str(line[0]) in datakeys:
 			datakeys.append(str(line[0]))
 		try:
@@ -62,22 +102,30 @@ def runcommand(command):
 	try:
 		subprocess.run(command, shell=True, check=True, capture_output=True, text=True, timeout=int(timeout)) # in future, timeout will be a user selected variable in a sys config file
 	except subprocess.CalledProcessError as e:
+		clearscreen()
 		input(f"""An error occured while running "subprocess.run({command})". See error below:
 \nCommand Failed: {e.cmd}
 \nExit Code: {e.returncode}
 \nTerminal said: {e.stderr.strip() or "No error output provided."}
 \nPress ENTER to continue: """)
 	except subprocess.TimeoutExpired:
+		clearscreen()
 		input(f"The process ran but hang (exceeded {timeout} seconds).\n\nPress ENTER to continue: ")		
 	except Exception:
-		userinput = input("subprocess.run() failed. Using backup os.system()... PRESS ENTER TO QUIT, PRESS ANY KEY + ENTER TO RUN \"os.system()\"")
-		if userinput.strip() != "":
-			print("Using outdated \"os.system()\"")
-			time.sleep(1)
-			os.system(command)
-		else:
-			print("Not running \"os.system()\", returning...")
-			time.sleep(1)
+		while True:
+			clearscreen()
+			userinput = input(f"subprocess.run() failed. Using backup os.system()...\n\nPress ENTER to quit, or\nPress Y + ENTER to run \"os.system({command})\"\nPlease enter your input: ")
+			if userinput.strip() == "Y":
+				print("Using outdated \"os.system()\"...")
+				time.sleep(1)
+				os.system(command)
+				break
+			elif userinput.strip() == "N":
+				print("Not running \"os.system()\", returning...")
+				time.sleep(1)
+				break
+			else:
+				print("Invalid input, please try again!")
 
 # main system process
 while True:
@@ -105,7 +153,7 @@ while True:
 	index = userinputint - 4
 	
 	if index == -3: # quit
-		print(clearscreen)
+		clearscreen()
 		while True:
 			userinput = input("Are you sure you wish to exit? Y/N: ")
 			if userinput.upper() == "Y":
@@ -117,11 +165,11 @@ while True:
 				print("Invalid response, please retype!\n")
 				time.sleep(1)
 	elif index == -2: # edit CSV
-		print(clearscreen)
+		clearscreen()
 		print("Error - feature not implemented!")
 		time.sleep(3)
 	elif index == -1: # Alt+F4 Linux
-		print(clearscreen)
+		clearscreen()
 		while True:
 			userinput = input("Are you sure you wish to shut down Linux? (NOTE: THIS SCRIPT DOES NOT WORK AS INTENDED. IF YOU RUN IT LINUX WON'T OPEN UNTIL YOU RESTART.) Y/N: ")
 			if userinput.upper() == "Y":
