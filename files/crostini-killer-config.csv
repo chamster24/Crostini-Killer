@@ -1,3 +1,9 @@
 # NAME,# SOFTKILL,# ROUGHKILL,# COMMENT
-Kill Tool Example,pkill example,pkill -9 example,
-Update Apps,sudo apt update && sudo apt upgrade,sudo apt upgrade,#not an intended purpose
+Kill Tool Example,example,!pkill -9 example,#clmn 2 will give 'pkill example'
+Update Apps,!sudo apt update && sudo apt upgrade,!sudo apt upgrade,#not an intended purpose
+App1, , , # Will give 'pkill App1' and 'pkill -9 App1' respectively
+App2,#Comment1,#Comment2, # Will not execute any code
+App3, !echo "special command1", !echo "special command2", will run 'echo "special command1"' and 'echo "special command2"' respectively
+App4, App3, App8, # Will run 'pkill App3' and 'pkill -9 App8' respectively
+App5, App2, , # Will run 'pkill App2' and 'pkill -9 App5' respectively
+App6, , ,# Will run 'pkill App6', 'pkill -9 App6' respectively
