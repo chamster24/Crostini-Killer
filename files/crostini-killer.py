@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 16.1.1"
+version = "V1.0.0 PreRelease Alpha Build 16.1.2"
 
 # import psutil # requires pip
 import math
@@ -69,6 +69,7 @@ settings = {
 }
 
 def terminal_mode_true_setup(): # default
+	global clearscreen, fullscreenwipe
 	def clearscreen():
 		print("=" * terminal_width)
 	if terminal_width % 2 == 0:
