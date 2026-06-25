@@ -5,7 +5,7 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
 version = "V1.0.0 PreRelease Alpha Build 12"
 
-import psutil
+# import psutil # requires pip
 import os
 import sys
 import csv
