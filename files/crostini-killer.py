@@ -165,7 +165,7 @@ def runcommand(command):
 # main system process
 while True:
 	fullscreenwipe()
-	print(f"Crostini Killer {version}\n")
+	print(f"Crostini Killer ({version})\n")
 	
 	message = "\n1. Exit program\n2. Edit config file\n3. Shut down Linux"
 	n = 4
