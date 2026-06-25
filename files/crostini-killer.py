@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 16"
+version = "V1.0.0 PreRelease Alpha Build 16.1"
 
 # import psutil # requires pip
 import math
@@ -99,12 +99,12 @@ else: # dict pair not in settings list
 
 SET_command_timeout = 10 # default timeout num of secs
 if "command_timeout" in settings:
-	if settings["command_timeout"].is_integer():
+	try:
 		if int(settings["command_timeout"]) > 0:
 			SET_command_timeout = int(settings["command_timeout"])
 		else: # value = 0
 			settingsfileerror("command_timeout can't be 0; defaulted to 10 sec", False)
-	else: # invalid value
+	except (ValueError, TypeError): # invalid value
 		settingsfileerror("Missing/non-int value for command_timeout; defaulted to 10 sec", False)
 else: # dict pair not in settings list
 	settingsfileerror("Missing value for command_timeout; defaulted to 10 sec", False)
