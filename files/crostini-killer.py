@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 14"
+version = "V1.0.0 PreRelease Alpha Build 15"
 
 # import psutil # requires pip
 import math
@@ -63,27 +63,27 @@ def settingsfileerror(error_details):
 
 # in future, check if TERMINAL MODE is ON or OFF
 settings = {
-	"terminal_mode": 1
+	"terminal_mode": 0
 }
 
-if settings["terminal_mode"] == 1:
+if settings["terminal_mode"] == 0:
 	def clearscreen():
 		print(ansi_clearscreen, end="")
 	def fullscreenwipe():
 		print(ansi_fullscreenwipe, end="")
-elif settings["terminal_mode"] == 0:
+elif settings["terminal_mode"] == 1:
 	def clearscreen():
 		print("=" * terminal_width)
-	if terminal_width % 2 = 0:
+	if terminal_width % 2 == 0:
 		def fullscreenwipe():
-			print("-+" * (terminal_width / 2))
+			print("-+" * (terminal_width // 2))
 			print("=" * terminal_width)
-			print("-+" * (terminal_width / 2))
+			print("-+" * (terminal_width // 2))
 	else:
 		def fullscreenwipe():
-			print(("-+" * math.floor(terminal_width / 2)) + "-")
+			print(("-+" * math.floor(terminal_width // 2)) + "-")
 			print("=" * terminal_width)
-			print(("-+" * math.floor(terminal_width / 2)) + "-")
+			print(("-+" * math.floor(terminal_width // 2)) + "-")
 else:
 	settingsfileerror("Missing/non-binary value for terminal_mode")
 	
@@ -199,21 +199,25 @@ while True:
 				time.sleep(1)
 				
 	else:
+		softkill_iscomment = False
+		hardkill_iscomment = False
 		if (data[datakeys[index]][0]).strip() == "": # assume name of kill program is the same as the pid
 			softkill = str(f"pkill {datakeys[index]}")
 		elif ((data[datakeys[index]][0]).strip()).startswith("!"): # custom command
-			softkill = ((data[datakeys[index]][0]).strip())[1:]
+			softkill = (((data[datakeys[index]][0]).strip())[1:]).strip()
 		elif ((data[datakeys[index]][0]).strip()).startswith("#"): # comment
-			softkill = str(f"# COMMENT (NO REAL CODE): '{((data[datakeys[index]][0]).strip())[1:]}'")
+			softkill_iscomment = True
+			softkill = str(f"#CMT'{(((data[datakeys[index]][0]).strip())[1:]).strip()}'")
 		else: # set pkill to PID put inside the row
 			softkill = str(f"pkill {data[datakeys[index]][0]}")
 
 		if (data[datakeys[index]][1]).strip() == "": # assume name of kill program is the same as the pid
 			hardkill = str(f"pkill -9 {datakeys[index]}")
 		elif ((data[datakeys[index]][1]).strip()).startswith("!"): # custom command
-			hardkill = ((data[datakeys[index]][1]).strip())[1:]
+			hardkill = (((data[datakeys[index]][1]).strip())[1:]).strip()
 		elif ((data[datakeys[index]][1]).strip()).startswith("#"): # comment
-			hardkill = str(f"# COMMENT (NO REAL CODE): '{((data[datakeys[index]][1]).strip())[1:]}'")
+			hardkill_iscomment = True
+			hardkill = str(f"#CMT'{(((data[datakeys[index]][1]).strip())[1:]).strip()}'")
 		else: # set pkill to PID put inside the row
 			hardkill = str(f"pkill -9 {data[datakeys[index]][1]}")
 	
@@ -222,18 +226,35 @@ while True:
 		while True:
 			if completed:
 				break
-			userinput = input(f"Choose how to kill {datakeys[index]}:\n\n1. Softkill (asking it nicely, '{softkill}')\n\n2. Hardkill (tactical nuke, risks loosing data, '{hardkill}')\n\n3. Nevermind, get me out of here (return to menu)\n\nSelect an option: ")
+
+			# MAKES the question string
+			question = f"Choose how to kill {datakeys[index]}:"
+			if softkill_iscomment:
+				question += f"\n\n1. Softkill NOT available - comment: {softkill[4:]}"
+			else:
+				question += f"\n\n1. Softkill (asking it nicely, '{softkill}')"
+			if hardkill_iscomment:
+				question += f"\n\n2. Hardkill NOT available - comment: {hardkill[4:]}"
+			else:
+				question += f"\n\n2. Hardkill (tactical nuke, risks losing data, '{hardkill}')"				
+			question += "\n\n3. Nevermind, get me out of here (return to menu)\n\nSelect an option: "
+			
+			clearscreen()
+			userinput = input(question)
 			try:
 				userinputint = int(userinput)
-				if (userinputint <= 2) and (userinputint != 0):
-					if userinputint == 1:
+				if userinputint == 1:
+					if not softkill_iscomment:
 						print(f"Shutting down process (softkill) with command '{softkill}'...")
 						runcommand(softkill)
 						completed = True
 						time.sleep(3)
 						break
-						
 					else:
+						input("You can't choose to run a comment!\nPress ENTER to continue: ")
+						
+				elif userinputint == 2:		
+					if not hardkill_iscomment:
 						while True:
 							userinput = input("Are you sure you wish to tell Linux to nuke this program? Y/N: ")
 							if userinput.upper() == "Y":
@@ -243,19 +264,20 @@ while True:
 								time.sleep(3)
 								break
 							elif userinput.upper() == "N":
-								print("Returning")
-								time.sleep(1)
+								print("Returning...")
+								time.sleep(1.5)
 								break
 							else:
-								print("Invalid response, please retype!\n")
-								time.sleep(1)
+								input("Invalid response, please retype!\nPress ENTER to continue: ")
+					else:
+						input("You can't choose to run a comment!\nPress ENTER to continue: ")
+						
 				elif userinputint == 3:
-					print("Returning to menu")
-					time.sleep(1)
+					print("Returning to menu...")
+					time.sleep(1.5)
+					completed = True
 					break
 				else:
-					print("Invalid option!\n")
-					time.sleep(1)
+					input("Invalid option!\nPress ENTER to continue: ")
 			except Exception:
-				print("An error occured.")
-				time.sleep(1)
+				input("An error occured. Are you sure you entered a number?\nPress ENTER to continue: ")
