@@ -3,7 +3,7 @@
 # Crostini Killer
 # Copyright (c) 2026 cHamster24. All rights reserved. Fair use permitted.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use at your own risk.
-version = "V1.0.0 PreRelease Alpha Build 15"
+version = "V1.0.0 PreRelease Alpha Build 16"
 
 # import psutil # requires pip
 import math
@@ -53,25 +53,22 @@ except Exception:
 # add check to see if settings file is malformed
 """
 
-def settingsfileerror(error_details):
+def settingsfileerror(error_details, crash):
 	try:
 		clearscreen()
 	except Exception:
 		print("=" * terminal_width)
 	input(f"There is an error with the settings file! Check info below:\n\nProgram said: \"{error_details}\"\n\nPress ENTER to quit: ")
-	sys.exit(65)
+	if crash:
+		sys.exit(65)
 
 # in future, check if TERMINAL MODE is ON or OFF
 settings = {
-	"terminal_mode": 0
+	"terminal_mode_t/f": False,
+	"command_timeout": 10
 }
 
-if settings["terminal_mode"] == 0:
-	def clearscreen():
-		print(ansi_clearscreen, end="")
-	def fullscreenwipe():
-		print(ansi_fullscreenwipe, end="")
-elif settings["terminal_mode"] == 1:
+def terminal_mode_true_setup(): # default
 	def clearscreen():
 		print("=" * terminal_width)
 	if terminal_width % 2 == 0:
@@ -84,8 +81,33 @@ elif settings["terminal_mode"] == 1:
 			print(("-+" * math.floor(terminal_width // 2)) + "-")
 			print("=" * terminal_width)
 			print(("-+" * math.floor(terminal_width // 2)) + "-")
-else:
-	settingsfileerror("Missing/non-binary value for terminal_mode")
+
+if "terminal_mode_t/f" in settings:
+	if settings["terminal_mode_t/f"] == False: #the user wishes the program be in program mode
+		def clearscreen():
+			print(ansi_clearscreen, end="")
+		def fullscreenwipe():
+			print(ansi_fullscreenwipe, end="")
+	elif settings["terminal_mode_t/f"] == True: # also known as debug mode
+		terminal_mode_true_setup()
+	else: # invalid value
+		settingsfileerror("Missing/non-binary value for terminal_mode; defaulting to True for debug purposes", True)
+		terminal_mode_true_setup()
+else: # dict pair not in settings list
+	settingsfileerror("Missing value for terminal_mode; defaulting to True for debug purposes", True)
+	terminal_mode_true_setup()
+
+SET_command_timeout = 10 # default timeout num of secs
+if "command_timeout" in settings:
+	if settings["command_timeout"].is_integer():
+		if int(settings["command_timeout"]) > 0:
+			SET_command_timeout = int(settings["command_timeout"])
+		else: # value = 0
+			settingsfileerror("command_timeout can't be 0; defaulted to 10 sec", False)
+	else: # invalid value
+		settingsfileerror("Missing/non-int value for command_timeout; defaulted to 10 sec", False)
+else: # dict pair not in settings list
+	settingsfileerror("Missing value for command_timeout; defaulted to 10 sec", False)
 	
 # writes the data list
 data = {}
@@ -111,11 +133,10 @@ for line in rawconfig:
 					"""
 
 def runcommand(command):
-	timeout = 10
 	try:
-		subprocess.run(command, shell=True, check=True, capture_output=True, text=True, timeout=int(timeout)) # in future, timeout will be a user selected variable in a sys config file
-	except subprocess.CalledProcessError as e:
+		subprocess.run(command, shell=True, check=True, capture_output=True, text=True, timeout=int(SET_command_timeout))
 		clearscreen()
+	except subprocess.CalledProcessError as e:
 		input(f"""An error occured while running "subprocess.run({command})". See error below:
 \nCommand Failed: {e.cmd}
 \nExit Code: {e.returncode}
@@ -123,7 +144,7 @@ def runcommand(command):
 \nPress ENTER to continue: """)
 	except subprocess.TimeoutExpired:
 		clearscreen()
-		input(f"The process ran but hang (exceeded {timeout} seconds).\n\nPress ENTER to continue: ")		
+		input(f"The process ran but hang (exceeded {SET_command_timeout} seconds).\n\nPress ENTER to continue: ")		
 	except Exception:
 		while True:
 			clearscreen()
